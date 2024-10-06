@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "experiment:item/hunger_throwing_dart"
+  }
+}

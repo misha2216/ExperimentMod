@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "experiment",
+	"version": "${version}",
+	"name": "Experiment mod",
+	"description": "Experiment Mod by misha2216",
+	"authors": [
+		"misha2216"
+	],
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.misha2216.experiment.ExperimentMod"
+		],
+		"client": [
+			"net.misha2216.experiment.ExperimentModClient"
+		],
+		"fabric-datagen": [
+			"net.misha2216.experiment.ExperimentModDataGenerator"
+		]
+	},
+	"mixins": [
+		"experiment.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
