@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "experiment:item/night_vision_throwing_dart"
-  }
-}

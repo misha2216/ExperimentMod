@@ -22,22 +22,22 @@ import net.misha2216.experiment.ExperimentMod;
 
 import java.util.Set;
 
-public class PoisonDartEntity extends PersistentProjectileEntity {
-    private static final TrackedData<Integer> COLOR = DataTracker.registerData(PoisonDartEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(PoisonDartEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+public class DartEntity extends PersistentProjectileEntity {
+    private static final TrackedData<Integer> COLOR = DataTracker.registerData(DartEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(DartEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
     private final Set<StatusEffectInstance> effects = Sets.newHashSet();
     private boolean colorSet;
 
-    public PoisonDartEntity(EntityType<? extends PoisonDartEntity> entityType, World world) {
+    public DartEntity(EntityType<? extends DartEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public PoisonDartEntity(World world, double x, double y, double z) {
-        super(ExperimentMod.POISON_DART, x, y, z, world);
+    public DartEntity(World world, double x, double y, double z) {
+        super(ExperimentMod.POISON_DART_ENTITY, x, y, z, world);
     }
 
-    public PoisonDartEntity(World world, LivingEntity owner) {
-        super(ExperimentMod.POISON_DART, owner, world);
+    public DartEntity(World world, LivingEntity owner) {
+        super(ExperimentMod.POISON_DART_ENTITY, owner, world);
     }
 
     protected ItemStack getItem() {
@@ -196,6 +196,6 @@ public class PoisonDartEntity extends PersistentProjectileEntity {
 
     @Override
     protected SoundEvent getHitSound() {
-        return ExperimentMod.ENTITY_POISON_DART_HIT;
+        return ExperimentMod.POISON_DART_ENTITY_HIT;
     }
 }
