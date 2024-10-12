@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "experiment:block/crusher_front_on",
-    "side": "experiment:block/crusher_side",
-    "top": "experiment:block/crusher_top"
-  }
-}

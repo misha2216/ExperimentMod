@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "experiment:item/poison_dart_head",
-    "layer1": "experiment:item/poison_dart_base"
-  }
-}
