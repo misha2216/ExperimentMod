@@ -1,23 +1,36 @@
 package net.misha2216.experiment.item;
 
+import dev.maxoduke.mods.potioncauldron.block.PotionCauldronBlock;
+import net.minecraft.block.Block;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.TippedArrowItem;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.*;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.misha2216.experiment.ExperimentMod;
-import net.misha2216.experiment.entity.DartEntity;
+import net.misha2216.experiment.entity.PoisonDartEntity;
+import org.jetbrains.annotations.Nullable;
 
-import static net.minecraft.potion.PotionUtil.buildTooltip;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class DartItem extends TippedArrowItem {
-    StatusEffectInstance statusEffectInstance;
+public class PoisonDartItem extends TippedArrowItem {
+    private boolean isCauldronClicked;
 
-    public DartItem(Settings settings) {
+    public PoisonDartItem(Settings settings) {
         super(settings);
     }
 
@@ -26,53 +39,57 @@ public class DartItem extends TippedArrowItem {
         ItemStack itemStack = user.getStackInHand(hand);
         world.playSound(null, user.getBlockPos(), ExperimentMod.POISON_DART_THROW, SoundCategory.NEUTRAL, 0.5f, 1.0f);
 
-        if (!world.isClient) {
-            DartEntity throwingDart = new DartEntity(world, user);
-            throwingDart.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 3.0f, 1.0f);
-            throwingDart.setDamage(throwingDart.getDamage());
-            throwingDart.setItem(itemStack);
-            if (this.statusEffectInstance != null) {
-                StatusEffectInstance potion = new StatusEffectInstance(statusEffectInstance);
-                throwingDart.addEffect(potion);
-                throwingDart.setColor(potion.getEffectType().getColor());
+        if (!world.isClient && !isCauldronClicked) {
+            PoisonDartEntity poisonDart = new PoisonDartEntity(world, user);
+            poisonDart.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 3.0f, 1.0f);
+            poisonDart.setDamage(poisonDart.getDamage());
+            poisonDart.setItem(itemStack);
+            Potion potion = PotionUtil.getPotion(itemStack);
+            if (potion != null) {
+                List<StatusEffectInstance> effects = potion.getEffects();
+                poisonDart.addEffects(effects);
             }
-            world.spawnEntity(throwingDart);
-        }
+            world.spawnEntity(poisonDart);
 
-        user.incrementStat(Stats.USED.getOrCreateStat(this));
-        if (!user.getAbilities().creativeMode) {
-            itemStack.decrement(1);
+            user.incrementStat(Stats.USED.getOrCreateStat(this));
+            if (!user.getAbilities().creativeMode) {
+                itemStack.decrement(1);
+            }
         }
 
         return TypedActionResult.success(itemStack, world.isClient());
     }
 
-    public StatusEffectInstance getStatusEffectInstance() {
-        return statusEffectInstance;
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        World world = context.getWorld();
+        Block clickedBlock = world.getBlockState(context.getBlockPos()).getBlock();
+
+        if (!(clickedBlock instanceof PotionCauldronBlock)) {
+            isCauldronClicked = false;
+            return ActionResult.PASS;
+        } else if (!world.isClient()) {
+            isCauldronClicked = true;
+        }
+
+        return ActionResult.SUCCESS;
     }
 
-//    public void buildTooltip(List<Text> list, float durationMultiplier) {
-//        ArrayList<Pair<EntityAttribute, EntityAttributeModifier>> list3 = Lists.newArrayList();
-//        if (this.statusEffectInstance == null) {
-//            list.add(Text.translatable("effect.none").formatted(Formatting.GRAY));
-//        } else {
-//            MutableText mutableText = Text.translatable(statusEffectInstance.getTranslationKey());
-//            StatusEffect statusEffect = statusEffectInstance.getEffectType();
-//            Map<EntityAttribute, EntityAttributeModifier> map = statusEffect.getAttributeModifiers();
-//            if (!map.isEmpty()) {
-//                for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : map.entrySet()) {
-//                    EntityAttributeModifier entityAttributeModifier = entry.getValue();
-//                    EntityAttributeModifier entityAttributeModifier2 = new EntityAttributeModifier(entityAttributeModifier.getName(), statusEffect.adjustModifierAmount(statusEffectInstance.getAmplifier(), entityAttributeModifier), entityAttributeModifier.getOperation());
-//                    list3.add(new Pair<>(entry.getKey(), entityAttributeModifier2));
-//                }
-//            }
-//            if (statusEffectInstance.getAmplifier() > 0) {
-//                mutableText = Text.translatable("potion.withAmplifier", mutableText, Text.translatable("potion.potency." + statusEffectInstance.getAmplifier()));
-//            }
-//            if (statusEffectInstance.getDuration() > 20) {
-//                mutableText = Text.translatable("potion.withDuration", mutableText, StatusEffectUtil.getDurationText(statusEffectInstance, durationMultiplier));
-//            }
-//            list.add(mutableText.formatted(statusEffect.getCategory().getFormatting()));
-//        }
-//    }
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        PotionUtil.buildTooltip(stack, tooltip, 1.0f);
+    }
+
+    public int getColor(ItemStack itemStack)
+    {
+        Potion potion = PotionUtil.getPotion(itemStack);
+        List<StatusEffectInstance> effects = potion.getEffects();
+
+        if (!effects.isEmpty())
+        {
+            return effects.get(0).getEffectType().getColor();
+        }
+        else
+            return 0;
+    }
 }

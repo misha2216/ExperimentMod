@@ -1,4 +1,4 @@
-package net.misha2216.experiment.mixin;
+package net.misha2216.experiment.block;
 
 
 import dev.maxoduke.mods.potioncauldron.PotionCauldron;

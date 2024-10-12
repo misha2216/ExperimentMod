@@ -6,18 +6,18 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.ProjectileEntityRenderer;
 import net.minecraft.util.Identifier;
 import net.misha2216.experiment.ExperimentMod;
-import net.misha2216.experiment.entity.DartEntity;
+import net.misha2216.experiment.entity.PoisonDartEntity;
 
 @Environment(value = EnvType.CLIENT)
-public class DartEntityRenderer extends ProjectileEntityRenderer<DartEntity> {
+public class PoisonDartEntityRenderer extends ProjectileEntityRenderer<PoisonDartEntity> {
     public static final Identifier TEXTURE = new Identifier(ExperimentMod.MOD_ID, "textures/entity/projectiles/poison_dart.png");
 
-    public DartEntityRenderer(EntityRendererFactory.Context context) {
+    public PoisonDartEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    public Identifier getTexture(DartEntity dartEntity) {
+    public Identifier getTexture(PoisonDartEntity poisonDartEntity) {
         return TEXTURE;
     }
 }

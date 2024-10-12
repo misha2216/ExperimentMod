@@ -20,23 +20,23 @@ import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import net.misha2216.experiment.ExperimentMod;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-public class DartEntity extends PersistentProjectileEntity {
-    private static final TrackedData<Integer> COLOR = DataTracker.registerData(DartEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(DartEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
-    private final Set<StatusEffectInstance> effects = Sets.newHashSet();
-    private boolean colorSet;
+public class PoisonDartEntity extends PersistentProjectileEntity {
+    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(PoisonDartEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+    private final List<StatusEffectInstance> effects = new ArrayList<>();
 
-    public DartEntity(EntityType<? extends DartEntity> entityType, World world) {
+    public PoisonDartEntity(EntityType<? extends PoisonDartEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public DartEntity(World world, double x, double y, double z) {
+    public PoisonDartEntity(World world, double x, double y, double z) {
         super(ExperimentMod.POISON_DART_ENTITY, x, y, z, world);
     }
 
-    public DartEntity(World world, LivingEntity owner) {
+    public PoisonDartEntity(World world, LivingEntity owner) {
         super(ExperimentMod.POISON_DART_ENTITY, owner, world);
     }
 
@@ -58,14 +58,13 @@ public class DartEntity extends PersistentProjectileEntity {
         return 0;
     }
 
-    public void addEffect(StatusEffectInstance effect) {
-        this.effects.add(effect);
+    public void addEffects(List<StatusEffectInstance> effects) {
+        this.effects.addAll(effects);
     }
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(COLOR, -1);
         this.getDataTracker().startTracking(ITEM, ItemStack.EMPTY);
     }
 
@@ -83,8 +82,7 @@ public class DartEntity extends PersistentProjectileEntity {
             }
         } else if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty() && this.inGroundTime >= 600) {
             this.getWorld().sendEntityStatus(this, (byte) 0);
-            this.effects.clear();
-            this.dataTracker.set(COLOR, -1);
+            //this.effects.clear();
         }
     }
 
@@ -106,34 +104,25 @@ public class DartEntity extends PersistentProjectileEntity {
     }
 
     private void spawnParticles(int amount) {
-        int i = this.getColor();
-        if (i == -1 || amount <= 0) {
-            return;
+        if (!this.effects.isEmpty())
+        {
+            int i = this.effects.get(0).getEffectType().getColor();
+            if (i == -1 || amount <= 0) {
+                return;
+            }
+            double d = (double) (i >> 16 & 0xFF) / 255.0;
+            double e = (double) (i >> 8 & 0xFF) / 255.0;
+            double f = (double) (i >> 0 & 0xFF) / 255.0;
+            for (int j = 0; j < amount; ++j) {
+                this.getWorld().addParticle(ParticleTypes.ENTITY_EFFECT, this.getParticleX(0.5), this.getRandomBodyY(), this.getParticleZ(0.5), d, e, f);
+            }
         }
-        double d = (double) (i >> 16 & 0xFF) / 255.0;
-        double e = (double) (i >> 8 & 0xFF) / 255.0;
-        double f = (double) (i >> 0 & 0xFF) / 255.0;
-        for (int j = 0; j < amount; ++j) {
-            this.getWorld().addParticle(ParticleTypes.ENTITY_EFFECT, this.getParticleX(0.5), this.getRandomBodyY(), this.getParticleZ(0.5), d, e, f);
-        }
-    }
-
-    public int getColor() {
-        return this.dataTracker.get(COLOR);
-    }
-
-    public void setColor(int color) {
-        this.colorSet = true;
-        this.dataTracker.set(COLOR, color);
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
 
-        if (this.colorSet) {
-            nbt.putInt("Color", this.getColor());
-        }
         if (!this.effects.isEmpty()) {
             NbtList nbtList = new NbtList();
             for (StatusEffectInstance statusEffectInstance : this.effects) {
@@ -150,13 +139,9 @@ public class DartEntity extends PersistentProjectileEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        for (StatusEffectInstance statusEffectInstance : PotionUtil.getCustomPotionEffects(nbt)) {
-            this.addEffect(statusEffectInstance);
-        }
-        if (nbt.contains("Color", 99)) {
-            this.setColor(nbt.getInt("Color"));
-        }
 
+        List<StatusEffectInstance> effects = PotionUtil.getCustomPotionEffects(nbt);
+        this.addEffects(effects);
         this.setItem(ItemStack.fromNbt(nbt.getCompound("Item")));
     }
 
@@ -179,8 +164,8 @@ public class DartEntity extends PersistentProjectileEntity {
 
     @Override
     public void handleStatus(byte status) {
-        if (status == 0) {
-            int i = this.getColor();
+        if (status == 0 && !this.effects.isEmpty()) {
+            int i = this.effects.get(0).getEffectType().getColor();
             if (i != -1) {
                 double d = (double) (i >> 16 & 0xFF) / 255.0;
                 double e = (double) (i >> 8 & 0xFF) / 255.0;

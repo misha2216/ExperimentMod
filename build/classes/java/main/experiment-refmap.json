@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "net/misha2216/experiment/mixin/BrewingRecipeRegistryMixin": {
+      "registerPotionRecipe": "method_8074(Lnet/minecraft/class_1842;Lnet/minecraft/class_1792;Lnet/minecraft/class_1842;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "net/misha2216/experiment/mixin/BrewingRecipeRegistryMixin": {
+        "registerPotionRecipe": "method_8074(Lnet/minecraft/class_1842;Lnet/minecraft/class_1792;Lnet/minecraft/class_1842;)V"
+      }
+    }
+  }
+}
