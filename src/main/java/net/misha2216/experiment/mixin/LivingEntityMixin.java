@@ -39,7 +39,7 @@ public abstract class LivingEntityMixin extends Entity {
 
             while(var5.hasNext()) {
                 StatusEffectInstance statusEffectInstance = (StatusEffectInstance)var5.next();
-                ((LivingEntityMixin)this).addStatusEffect(statusEffectInstance);
+                this.addStatusEffect(statusEffectInstance);
             }
         }
 

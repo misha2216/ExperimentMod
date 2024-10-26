@@ -36,7 +36,7 @@ public abstract class AnimalEntityMixin extends MobEntity {
 
             while(var6.hasNext()) {
                 StatusEffectInstance statusEffectInstance = (StatusEffectInstance)var6.next();
-                ((AnimalEntityMixin)this).addStatusEffect(statusEffectInstance);
+                this.addStatusEffect(statusEffectInstance);
             }
         }
 
