@@ -10,15 +10,6 @@ import net.minecraft.util.Identifier;
 import net.misha2216.experiment.ExperimentMod;
 
 public class ModItemGroups {
-    public static final ItemGroup EXPERIMENT_GROUP = Registry.register(Registries.ITEM_GROUP,
-            new Identifier(ExperimentMod.MOD_ID, "part"),
-            FabricItemGroup.builder().displayName(Text.translatable("itemgroup.experiment"))
-                    .icon(() -> new ItemStack(ModItems.PART)).entries((displayContext, entries) -> {
-                        entries.add(ModItems.PART);
-
-
-                    }).build());
-
 
     public static void registerItemGroups() {
         ExperimentMod.LOGGER.info("Registering Item Groups for " + ExperimentMod.MOD_ID);

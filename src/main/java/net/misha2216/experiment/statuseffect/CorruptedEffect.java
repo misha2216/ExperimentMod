@@ -13,7 +13,7 @@ public class CorruptedEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity pLivingEntity, int pAmplifier) {
-        this.addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", -1, EntityAttributeModifier.Operation.ADDITION);
+        this.addAttributeModifier(EntityAttributes.GENERIC_FOLLOW_RANGE, "648D7064-6A60-4F59-8ABE-C2C23A6DD7A9", 5, EntityAttributeModifier.Operation.ADDITION);
         super.applyUpdateEffect(pLivingEntity, pAmplifier);
 
     }

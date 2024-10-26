@@ -11,10 +11,10 @@ import net.minecraft.util.Identifier;
 import net.misha2216.experiment.ExperimentMod;
 
 public class ModItems {
-    public static final Item PART = registerItem("part", new Item(new FabricItemSettings()));
+    public static final Item CORRUPT_CATALYST = registerItem("corrupt_catalyst", new Item(new FabricItemSettings()));
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries) {
-        entries.add(PART);
+        entries.add(CORRUPT_CATALYST);
     }
 
     private static Item registerItem(String name, Item item) {
@@ -23,7 +23,5 @@ public class ModItems {
 
     public static void registerModItems() {
         ExperimentMod.LOGGER.info("Registering Mod Items for " + ExperimentMod.MOD_ID);
-
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItems::addItemsToIngredientItemGroup);
     }
 }
