@@ -29,7 +29,8 @@
     }
   },
   "result": {
-    "item": "experiment:corruption_potion",
-    "count": 1
+    "item": "minecraft:potion",
+    "count": 1,
+    "nbt": "{\"Potion\":\"experiment:corruption_potion\"}"
   }
 }

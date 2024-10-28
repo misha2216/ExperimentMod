@@ -9,7 +9,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.misha2216.experiment.ExperimentMod;
-import net.misha2216.experiment.item.ModItems;
 import net.misha2216.experiment.mixin.BrewingRecipeRegistryMixin;
 
 
@@ -89,7 +88,6 @@ public class ModPotions {
 
 
     public static void registerPotionRecipes() {
-
         BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(Potions.AWKWARD, Items.ECHO_SHARD,
                 ModPotions.DARKNESS_POTION);
         BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(ModPotions.DARKNESS_POTION, Items.REDSTONE,
