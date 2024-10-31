@@ -82,7 +82,7 @@ public class PoisonDartEntity extends PersistentProjectileEntity {
             }
         } else if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty() && this.inGroundTime >= 600) {
             this.getWorld().sendEntityStatus(this, (byte) 0);
-            //this.effects.clear();
+            this.effects.clear();
         }
     }
 

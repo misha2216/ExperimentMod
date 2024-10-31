@@ -44,6 +44,10 @@ public class ThrowingDartItem extends TippedArrowItem {
             Potion potion = PotionUtil.getPotion(itemStack);
             if (potion != null) {
                 List<StatusEffectInstance> effects = potion.getEffects();
+                effects = effects
+                        .stream()
+                        .map(StatusEffectInstance::new)
+                        .toList();
                 poisonDart.addEffects(effects);
             }
             world.spawnEntity(poisonDart);
